@@ -4,7 +4,9 @@ Sitio estático gratuito para Cloud Sync DMZ, alojado en GitHub Pages.
 
 ## Sitio en Vivo
 
-https://rodolfocampos2986-art.github.io/dmz-site/
+https://dmzpanama.github.io/
+
+Cuando tengas tu número de WhatsApp, reemplaza `507XXXXXXXX` en `index.html` y haz push.
 
 ## Actualizar Número de WhatsApp
 
