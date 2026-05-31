@@ -1,14 +1,20 @@
-# Cloud Sync DMZ — Landing Page
+# Cloud Sync DMZ — Public Landing Page
 
-## Local
-Visit http://localhost:3000/site/ (full API support: gallery + lead form)
+Free static landing page for Cloud Sync DMZ, hosted on GitHub Pages.
 
-## Deploy to GitHub Pages (free)
+## Live Site
 
-1. Create a repo on GitHub
-2. Push the `dmz-site/` folder as the root of that repo
-3. Go to Settings → Pages → deploy from main branch /root
-4. Update WhatsApp number in `index.html`: replace `507XXXXXXXX` with your number
-5. Done
+https://rodolfocampos2986-art.github.io/dmz-site/
 
-**Note:** On GitHub Pages the API endpoints won't work (no backend). The form falls back to WhatsApp-only. For API support, deploy the full server to Render.com or Railway.app.
+## Update WhatsApp Number
+
+Edit `index.html` — replace all `507XXXXXXXX` with your real number (format: `507` + 8 digits, no spaces/symbols). Then commit and push — Pages auto-deploys.
+
+## Local Development
+
+```
+cd bot && node server.js
+open http://localhost:3000/site/
+```
+
+On localhost the gallery and lead form connect to the backend API. On GitHub Pages they show fallback messages — the site is a pure brochure (WhatsApp button still works).
