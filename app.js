@@ -11,15 +11,15 @@ document.querySelectorAll('.nav-links a').forEach(a => {
 
 // Galería local (funciona sin backend — GitHub Pages)
 const MEDIA_FILES = [
-  { file: '12 ds.png', type: 'image' },
-  { file: 'arygh4we5.png', type: 'image' },
-  { file: 'ASEtfrw.png', type: 'image' },
+  { file: 'pic-1.png', type: 'image' },
+  { file: 'pic-2.png', type: 'image' },
+  { file: 'pic-3.png', type: 'image' },
+  { file: 'pic-4.png', type: 'image' },
+  { file: 'pic-5.png', type: 'image' },
+  { file: 'pic-6.png', type: 'image' },
+  { file: 'pic-7.png', type: 'image' },
+  { file: 'pic-8.png', type: 'image' },
   { file: 'DMZ.mp4', type: 'video' },
-  { file: 'download.png', type: 'image' },
-  { file: 'erhgerty45.png', type: 'image' },
-  { file: 'rtetwq.png', type: 'image' },
-  { file: 'sadfb.png', type: 'image' },
-  { file: 'wegffd.png', type: 'image' },
 ];
 
 function loadGallery() {
