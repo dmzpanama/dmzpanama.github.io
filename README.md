@@ -1,20 +1,20 @@
-# Cloud Sync DMZ — Public Landing Page
+# Cloud Sync DMZ Panamá — Página de Aterrizaje
 
-Free static landing page for Cloud Sync DMZ, hosted on GitHub Pages.
+Sitio estático gratuito para Cloud Sync DMZ, alojado en GitHub Pages.
 
-## Live Site
+## Sitio en Vivo
 
 https://rodolfocampos2986-art.github.io/dmz-site/
 
-## Update WhatsApp Number
+## Actualizar Número de WhatsApp
 
-Edit `index.html` — replace all `507XXXXXXXX` with your real number (format: `507` + 8 digits, no spaces/symbols). Then commit and push — Pages auto-deploys.
+Edita `index.html` — reemplaza los `507XXXXXXXX` con tu número real (formato: `507` + 8 dígitos, sin espacios ni símbolos). Luego haz commit y push — GitHub Pages se despliega automáticamente.
 
-## Local Development
+## Desarrollo Local
 
 ```
 cd bot && node server.js
-open http://localhost:3000/site/
+Abrir http://localhost:3000/site/
 ```
 
-On localhost the gallery and lead form connect to the backend API. On GitHub Pages they show fallback messages — the site is a pure brochure (WhatsApp button still works).
+En localhost la galería y el formulario se conectan al backend. En GitHub Pages muestran mensajes de respaldo — el sitio es un folleto puro (el botón de WhatsApp sigue funcionando).

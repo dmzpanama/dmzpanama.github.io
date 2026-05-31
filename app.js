@@ -1,25 +1,24 @@
 const API = window.location.origin + '/api';
 
-// Mobile nav toggle
+// Menú móvil
 document.querySelector('.nav-toggle')?.addEventListener('click', () => {
   document.querySelector('.nav-links')?.classList.toggle('open');
 });
 
-// Close nav on link click
 document.querySelectorAll('.nav-links a').forEach(a => {
   a.addEventListener('click', () => {
     document.querySelector('.nav-links')?.classList.remove('open');
   });
 });
 
-// Gallery
+// Galería
 async function loadGallery() {
   const grid = document.getElementById('media-grid');
   if (!grid) return;
   try {
     const files = await (await fetch(API + '/media')).json();
     if (files.length === 0) {
-      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8a9aa8;padding:40px">Gallery coming soon</p>';
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8a9aa8;padding:40px">Galería próximamente</p>';
       return;
     }
     grid.innerHTML = files.map(f => {
@@ -31,11 +30,11 @@ async function loadGallery() {
         '</div>';
     }).join('');
   } catch (err) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8a9aa8;padding:40px">Gallery unavailable</p>';
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8a9aa8;padding:40px">Galería no disponible</p>';
   }
 }
 
-// Lead form
+// Formulario de contacto
 document.getElementById('lead-form')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const name = document.getElementById('form-name').value.trim();
@@ -45,20 +44,20 @@ document.getElementById('lead-form')?.addEventListener('submit', async function(
   const success = document.getElementById('form-success');
   if (!name || !phone) return;
   btn.disabled = true;
-  btn.textContent = 'Sending...';
+  btn.textContent = 'Enviando...';
   try {
     const res = await fetch(API + '/leads/public', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, notes: station ? `Station: ${station}` : '' }),
+      body: JSON.stringify({ name, phone, notes: station ? `Gasolinera: ${station}` : '' }),
     });
     if (!res.ok) throw new Error('Error');
     success.classList.remove('hidden');
     this.reset();
-    btn.textContent = 'Sent!';
-    setTimeout(() => { btn.textContent = 'Send'; btn.disabled = false; }, 3000);
+    btn.textContent = '¡Enviado!';
+    setTimeout(() => { btn.textContent = 'Enviar'; btn.disabled = false; }, 3000);
   } catch (err) {
-    btn.textContent = 'Error — try again';
+    btn.textContent = 'Error — intenta de nuevo';
     btn.disabled = false;
   }
 });
