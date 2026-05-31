@@ -11,15 +11,15 @@ document.querySelectorAll('.nav-links a').forEach(a => {
 
 // Galería local (funciona sin backend — GitHub Pages)
 const MEDIA_FILES = [
-  { file: 'pic-1.png', type: 'image' },
-  { file: 'pic-2.png', type: 'image' },
-  { file: 'pic-3.png', type: 'image' },
-  { file: 'pic-4.png', type: 'image' },
-  { file: 'pic-5.png', type: 'image' },
-  { file: 'pic-6.png', type: 'image' },
-  { file: 'pic-7.png', type: 'image' },
-  { file: 'pic-8.png', type: 'image' },
-  { file: 'DMZ.mp4', type: 'video' },
+  { file: 'pic-1.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-2.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-3.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-4.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-5.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-6.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-7.webp', type: 'image', w: 600, h: 450 },
+  { file: 'pic-8.webp', type: 'image', w: 600, h: 450 },
+  { file: 'DMZ-compressed.mp4', type: 'video' },
 ];
 
 function loadGallery() {
@@ -29,8 +29,8 @@ function loadGallery() {
     const url = 'media/' + encodeURIComponent(f.file);
     return '<div class="media-item">' +
       (f.type === 'video'
-        ? '<video src="' + url + '" preload="metadata" muted controls></video>'
-        : '<img src="' + url + '" loading="lazy" onclick="window.open(this.src,\'_blank\')" style="cursor:pointer"/>') +
+        ? '<video src="' + url + '" preload="none" muted controls></video>'
+        : '<img src="' + url + '" loading="lazy" width="' + f.w + '" height="' + f.h + '" onclick="window.open(this.src,\'_blank\')" style="cursor:pointer;width:100%;height:auto"/>') +
       '</div>';
   }).join('');
 }
