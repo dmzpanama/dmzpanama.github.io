@@ -6,7 +6,7 @@ Sitio estático gratuito para Cloud Sync DMZ, alojado en GitHub Pages.
 
 https://dmzpanama.github.io/
 
-Cuando tengas tu número de WhatsApp, reemplaza `507XXXXXXXX` en `index.html` y haz push.
+Número de WhatsApp: **+507 6765-0336** — actualizado en `index.html`.
 
 ## Actualizar Número de WhatsApp
 

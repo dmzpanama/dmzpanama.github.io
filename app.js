@@ -1,3 +1,8 @@
+// ─── Configuration ─────────────────────────────────────────
+// Replace this URL with your deployed Google Apps Script Web App URL.
+// See DEPLOYMENT_GUIDE.md for instructions.
+const APPS_SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
+
 // Menú móvil
 document.querySelector('.nav-toggle')?.addEventListener('click', () => {
   document.querySelector('.nav-links')?.classList.toggle('open');
@@ -35,36 +40,145 @@ function loadGallery() {
   }).join('');
 }
 
-// Formulario de contacto
-document.getElementById('lead-form')?.addEventListener('submit', async function(e) {
+// Limpiar errores al escribir
+document.querySelectorAll('.assessment-field input, .assessment-field select').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('error');
+    const errorEl = document.getElementById(el.id + '-error');
+    if (errorEl) errorEl.textContent = '';
+  });
+  el.addEventListener('change', () => {
+    if (el.id === 'as-locations' && el.value) {
+      el.classList.remove('error');
+      const errorEl = document.getElementById(el.id + '-error');
+      if (errorEl) errorEl.textContent = '';
+    }
+  });
+});
+
+// ─── Assessment Form / Lead Capture ────────────────────────
+
+function validateField(id) {
+  const el = document.getElementById(id);
+  const errorEl = document.getElementById(id + '-error');
+  let valid = true;
+  let msg = '';
+  if (el.hasAttribute('required') && !el.value.trim()) {
+    valid = false;
+    msg = 'Este campo es obligatorio';
+  } else if (id === 'as-email' && el.value.trim()) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!re.test(el.value.trim())) { valid = false; msg = 'Correo electrónico inválido'; }
+  } else if (id === 'as-phone' && el.value.trim()) {
+    const digits = el.value.replace(/\D/g, '');
+    if (digits.length < 7) { valid = false; msg = 'Ingrese al menos 7 dígitos'; }
+  }
+  el.classList.toggle('error', !valid);
+  if (errorEl) errorEl.textContent = msg;
+  return valid;
+}
+
+document.getElementById('assessment-form')?.addEventListener('submit', async function (e) {
   e.preventDefault();
-  const name = document.getElementById('form-name').value.trim();
-  const phone = document.getElementById('form-phone').value.trim();
-  const station = document.getElementById('form-station')?.value.trim() || '';
-  const btn = this.querySelector('button');
-  const success = document.getElementById('form-success');
-  if (!name || !phone) return;
+
+  const fields = ['as-name', 'as-company', 'as-station', 'as-phone', 'as-email', 'as-locations'];
+  const allValid = fields.every(f => validateField(f));
+  if (!allValid) return;
+
+  const form = this;
+  const btn = form.querySelector('.assessment-submit');
+  const formGrid = form.querySelector('.assessment-form-grid');
+  const errorContainer = document.getElementById('assessment-error');
+  const successContainer = document.getElementById('assessment-success');
+  const investmentRange = document.querySelector('.investment-range');
+
+  const payload = {
+    name: document.getElementById('as-name').value.trim(),
+    company: document.getElementById('as-company').value.trim(),
+    station: document.getElementById('as-station').value.trim(),
+    phone: document.getElementById('as-phone').value.trim(),
+    email: document.getElementById('as-email').value.trim(),
+    locations: document.getElementById('as-locations').value,
+  };
+
+  console.log('[DMZ Lead Capture] Submitting:', payload);
+
   btn.disabled = true;
   btn.textContent = 'Enviando...';
+
+  if (errorContainer) errorContainer.classList.add('hidden');
+
   try {
-    const res = await fetch(window.location.origin + '/api/leads/public', {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      redirect: 'follow',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, notes: station ? `Gasolinera: ${station}` : '' }),
+      body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error('Error');
-    success.classList.remove('hidden');
-    this.reset();
-    btn.textContent = '¡Enviado!';
-    setTimeout(() => { btn.textContent = 'Enviar'; btn.disabled = false; }, 3000);
+
+    console.log('[DMZ Lead Capture] Response status:', res.status);
+
+    const result = await res.json();
+    console.log('[DMZ Lead Capture] Response body:', result);
+
+    if (!res.ok || !result.success) {
+      const msg = result.errors ? result.errors.join('. ') : 'Error al enviar el formulario';
+      throw new Error(msg);
+    }
+
+    console.log('[DMZ Lead Capture] Success — lead saved to Google Sheets');
+
+    formGrid.classList.add('hidden');
+    btn.classList.add('hidden');
+    if (investmentRange) investmentRange.classList.add('hidden');
+    if (successContainer) successContainer.classList.remove('hidden');
   } catch (err) {
-    // Fallback: form works offline too
-    success.classList.remove('hidden');
-    success.textContent = 'Gracias — te contactaremos por WhatsApp pronto.';
-    this.reset();
-    btn.textContent = 'Enviado';
+    console.error('[DMZ Lead Capture] Failed:', err.message);
+
+    if (APPS_SCRIPT_URL === 'YOUR_WEB_APP_URL_HERE') {
+      console.warn('[DMZ Lead Capture] APPS_SCRIPT_URL is still set to the placeholder. Update it with your deployed URL.');
+    }
+
     btn.disabled = false;
+    btn.textContent = 'Solicitar Evaluación Gratuita';
+
+    if (errorContainer) {
+      errorContainer.querySelector('.assessment-error-text').textContent = err.message || 'Error de conexión. Intente de nuevo.';
+      errorContainer.classList.remove('hidden');
+    }
   }
 });
 
 loadGallery();
+
+// Calculadora de ingresos publicitarios
+function setupRevenueCalculator() {
+  const outdoor = document.getElementById('calc-outdoor');
+  const indoor = document.getElementById('calc-indoor');
+  const traffic = document.getElementById('calc-traffic');
+  const rate = document.getElementById('calc-rate');
+  if (!outdoor) return;
+
+  function updateCalc() {
+    const o = Number(outdoor.value) || 0;
+    const i = Number(indoor.value) || 0;
+    const r = Number(rate.value) || 0;
+    const monthlyOutdoor = o * r;
+    const monthlyIndoor = i * r;
+    const total = monthlyOutdoor + monthlyIndoor;
+    const annual = total * 12;
+    document.getElementById('calc-outdoor-result').textContent = '$' + monthlyOutdoor.toLocaleString();
+    document.getElementById('calc-indoor-result').textContent = '$' + monthlyIndoor.toLocaleString();
+    document.getElementById('calc-total-monthly').textContent = '$' + total.toLocaleString();
+    document.getElementById('calc-annual').textContent = '$' + annual.toLocaleString();
+    document.getElementById('calc-5year').textContent = '$' + (annual * 5).toLocaleString();
+  }
+
+  outdoor.addEventListener('input', updateCalc);
+  indoor.addEventListener('input', updateCalc);
+  traffic.addEventListener('input', updateCalc);
+  rate.addEventListener('input', updateCalc);
+  updateCalc();
+}
+
+setupRevenueCalculator();
