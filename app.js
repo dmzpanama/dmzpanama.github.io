@@ -1,7 +1,7 @@
 // ─── Configuration ─────────────────────────────────────────
 // Replace this URL with your deployed Google Apps Script Web App URL.
 // See DEPLOYMENT_GUIDE.md for instructions.
-const APPS_SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFSk4bcpEeqhkhTMskhCTTJ8X9AKEjemMyl-NNHjFERrt3AcYLAaMTJKfwh8mH7d0Cvg/exec';
 
 // Menú móvil
 document.querySelector('.nav-toggle')?.addEventListener('click', () => {
