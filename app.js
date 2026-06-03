@@ -109,11 +109,14 @@ document.getElementById('assessment-form')?.addEventListener('submit', async fun
   if (errorContainer) errorContainer.classList.add('hidden');
 
   try {
+    const params = new URLSearchParams(payload);
+
+    console.log('[DMZ Lead Capture] Submitting as form-urlencoded');
+
     const res = await fetch(APPS_SCRIPT_URL, {
       redirect: 'follow',
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: params,
     });
 
     console.log('[DMZ Lead Capture] Response status:', res.status);
